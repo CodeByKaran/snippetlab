@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import ThemeToggle from "../theme-toggle";
 import { Button } from "../ui/button";
 import SearchBar from "./searchbar";

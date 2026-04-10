@@ -1,6 +1,6 @@
-import React, { use, useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import SearchBar from "./searchbar";
+
 import { CornerDownLeft, Flame, Info, SearchIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { useNavigate } from "react-router-dom";

@@ -6,7 +6,7 @@ import {
   nightOwl,
 } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useTheme } from "./components/theme-provider";
-import { Copy, Check, Calendar, Tag, User, ChevronLeft } from "lucide-react";
+import { Copy, Check, Calendar, User, ChevronLeft } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getOneSnippet } from "./apis/snippet-apis";
 import { useNavigate } from "react-router-dom";

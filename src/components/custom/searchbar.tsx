@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Input } from "../ui/input";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import { Card, CardHeader } from "../ui/card";
+
 import SearchPage from "./searchPage";
 
 interface SearchBarProps {

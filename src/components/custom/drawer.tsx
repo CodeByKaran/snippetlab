@@ -1,5 +1,5 @@
 import { Equal } from "lucide-react";
-import React from "react";
+
 import { Button } from "../ui/button";
 
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
