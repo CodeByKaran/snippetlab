@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "../ui/input";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import { Card, CardHeader } from "../ui/card";
+import SearchPage from "./searchPage";
 
 interface SearchBarProps {
   // Define any props you want to pass to the SearchBar component
@@ -8,6 +11,7 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({ isReadOnly, className }: SearchBarProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const hadleClick = () => {
     if (isReadOnly) {
       // If the search bar is read-only, do nothing or show a message
@@ -16,16 +20,26 @@ const SearchBar = ({ isReadOnly, className }: SearchBarProps) => {
     // todo
   };
 
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <div className={className}>
-      <Input
-        // placeholder="Search snippets..."
-        onClick={hadleClick}
-        readOnly={isReadOnly}
-        className=""
-        value={"Search snippets..."}
-      />
-    </div>
+    <Dialog key={"search-dialog"} open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <div className={className}>
+          <Input
+            placeholder="Search snippets..."
+            onClick={hadleClick}
+            readOnly={isReadOnly}
+            className=""
+          />
+        </div>
+      </DialogTrigger>
+      <DialogContent className="bg-blue-400 p-0" showCloseButton={false}>
+        <SearchPage close={handleClose} />
+      </DialogContent>
+    </Dialog>
   );
 };
 

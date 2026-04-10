@@ -3,7 +3,11 @@ import NavBar from "./components/custom/navbar";
 import AdminLogin from "./admin-login";
 import Home from "./home";
 import { ThemeProvider } from "./components/theme-provider";
+import SnippetPage from "./snippet-page";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 // Separate component so we can use useLocation hook
 const Layout = () => {
   const location = useLocation();
@@ -35,6 +39,7 @@ const Layout = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/snippet/:id" element={<SnippetPage />} />
         </Routes>
       </div>
     </main>
@@ -43,11 +48,13 @@ const Layout = () => {
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <BrowserRouter>
-        <Layout />
-      </BrowserRouter>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider defaultTheme="light">
+        <BrowserRouter>
+          <Layout />
+        </BrowserRouter>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 
