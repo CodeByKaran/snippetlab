@@ -6,7 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "./utils/supabase";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import NavBar from "./components/custom/navbar";
