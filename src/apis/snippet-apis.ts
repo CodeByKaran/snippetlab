@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase";
+import { supabase } from "../utils/supabase";
 
 // In your snippet-apis.js
 const paginateSnippets = async (params: {

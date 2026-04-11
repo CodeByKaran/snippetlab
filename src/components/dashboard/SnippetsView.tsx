@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "../../utils/supabase";
 import { Trash2, Edit3, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 import EditSnippetDialog from "./EditSnippetDialog";

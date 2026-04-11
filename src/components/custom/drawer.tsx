@@ -7,11 +7,11 @@ import {
   DrawerTrigger,
   DrawerHeader,
   DrawerTitle,
-} from "@/components/ui/drawer";
+} from "../ui/drawer";
 import SearchBar from "./searchbar";
 import ThemeToggle from "../theme-toggle";
 import { useNavigate, useLocation } from "react-router-dom";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "../../utils/supabase";
 import type { Session } from "@supabase/supabase-js";
 
 const DrawerMenu = () => {

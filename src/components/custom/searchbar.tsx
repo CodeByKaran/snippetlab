@@ -3,7 +3,7 @@ import { Input } from "../ui/input";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Search } from "lucide-react"; // Import Search icon
 import SearchPage from "./searchPage";
-import { cn } from "@/lib/utils"; // Shadcn utility for classes
+import { cn } from "../../lib/utils"; // Shadcn utility for classes
 
 interface SearchBarProps {
   isReadOnly?: boolean;

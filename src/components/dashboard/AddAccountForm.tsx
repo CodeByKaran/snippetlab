@@ -2,7 +2,7 @@
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "../../utils/supabase";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";

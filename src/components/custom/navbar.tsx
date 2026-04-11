@@ -5,7 +5,7 @@ import SearchBar from "./searchbar";
 import { Code, LayoutDashboard, LogOut } from "lucide-react";
 import DrawerMenu from "./drawer";
 import { useNavigate, useLocation } from "react-router-dom";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "../../utils/supabase";
 import type { Session } from "@supabase/supabase-js";
 
 const NavBar = () => {

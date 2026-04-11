@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Search, Flame, Info, CornerDownLeft, Loader2 } from "lucide-react";
 import { Input } from "../ui/input";
-import { getTrendingSnippets, searchSnippets } from "@/apis/snippet-apis";
+import { getTrendingSnippets, searchSnippets } from "../../apis/snippet-apis";
 
 const SearchPage = ({ close }: { close: () => void }) => {
   const [searchQuery, setSearchQuery] = useState("");

@@ -1,6 +1,6 @@
 // components/dashboard/AccountsView.tsx
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "../../utils/supabase";
 import { Badge } from "../ui/badge";
 
 const AccountsView = () => {

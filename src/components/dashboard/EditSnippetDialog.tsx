@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "../../utils/supabase";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import {
   Dialog,
