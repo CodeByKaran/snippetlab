@@ -1,18 +1,57 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "@/utils/supabase";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import NavBar from "./components/custom/navbar";
 import AdminLogin from "./admin-login";
 import Home from "./home";
-import { ThemeProvider } from "./components/theme-provider";
 import SnippetPage from "./snippet-page";
-
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Dashboard from "./dashboard";
+import { ThemeProvider } from "./components/theme-provider";
 
 const queryClient = new QueryClient();
-// Separate component so we can use useLocation hook
+
+// 1. Protected Route Component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setAuthenticated(!!session);
+      setLoading(false);
+    };
+    checkAuth();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!authenticated) {
+    return <Navigate to="/admin-login" replace />;
+  }
+
+  return <>{children}</>;
+};
+
 const Layout = () => {
   const location = useLocation();
 
-  // List all routes where NavBar should be hidden
   const hideNavBarOn = ["/admin-login", "/search-page"];
   const showNavBar = !hideNavBarOn.includes(location.pathname);
 
@@ -35,11 +74,21 @@ const Layout = () => {
       />
 
       <div className="relative z-10">
-        {showNavBar && <NavBar />} {/* conditionally render */}
+        {showNavBar && <NavBar />}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/snippet/:id" element={<SnippetPage />} />
+
+          {/* 2. Protect the Dashboard Route */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </main>

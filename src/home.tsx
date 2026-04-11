@@ -95,7 +95,6 @@ const Home = () => {
 
         {!hasNextPage && allSnippets.length > 0 && (
           <div className="space-y-2 text-center">
-            <p className="text-2xl">🔚</p>
             <p className="text-gray-400 text-sm font-medium">
               You've reached the end of the collection.
             </p>

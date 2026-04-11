@@ -54,4 +54,29 @@ const getOneSnippet = async (id: string) => {
   }
 };
 
-export { paginateSnippets, getOneSnippet };
+// Fetch 4 latest snippets for the "Trending" view
+const getTrendingSnippets = async () => {
+  const { data, error } = await supabase
+    .from("snippets")
+    .select("id, title")
+    .order("created_at", { ascending: false })
+    .limit(4);
+
+  if (error) throw error;
+  return data;
+};
+
+// Search snippets by title (Fuzzy match, limit 10)
+const searchSnippets = async (query: string) => {
+  if (!query) return [];
+  const { data, error } = await supabase
+    .from("snippets")
+    .select("id, title")
+    .ilike("title", `%${query}%`) // case-insensitive fuzzy match
+    .limit(10);
+
+  if (error) throw error;
+  return data;
+};
+
+export { paginateSnippets, getOneSnippet, getTrendingSnippets, searchSnippets };

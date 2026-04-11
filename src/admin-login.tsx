@@ -1,3 +1,4 @@
+import { useState } from "react"; // Added useState
 import * as z from "zod";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,48 +19,84 @@ import {
 import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "./utils/supabase";
 
 const formSchema = z.object({
   email: z
     .email({ message: "Invalid email address." })
-    .min(5, "Email must be at least 5 characters.")
-    .max(32, "Email must be at most 32 characters."),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters.")
-    .max(100, "Password must be at most 100 characters."),
+    .min(5, "Email must be at least 5 characters."),
+  password: z.string().min(6, "Password must be at least 6 characters."),
 });
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
-  const handleBack = () => {
-    navigate(-1); // Navigate back to the previous page
-  };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log("Form submitted:", data);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoading(true);
+    setServerError(null);
+
+    try {
+      // 1. Authenticate with Supabase
+      const { data: authData, error: authError } =
+        await supabase.auth.signInWithPassword({
+          email: values.email,
+          password: values.password,
+        });
+
+      if (authError) throw new Error(authError.message);
+      if (!authData.user) throw new Error("No user found.");
+
+      // 2. Check if the user exists in the 'profiles' table and is an admin
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("is_admin")
+        .eq("id", authData.user.id)
+        .single();
+
+      if (profileError || !profile?.is_admin) {
+        // 3. If not an admin, sign them out immediately
+        await supabase.auth.signOut();
+        throw new Error("Access denied. You do not have admin privileges.");
+      }
+
+      // 4. Success - Redirect to Dashboard
+      console.log("Admin logged in successfully");
+      navigate("/admin/dashboard");
+    } catch (error: any) {
+      setServerError(error.message || "An unexpected error occurred.");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleBack = () => navigate(-1);
 
   return (
     <div className="flex h-dvh w-full items-center justify-center">
-      <Card className="w-[85%]  min-[510px]:max-w-md">
+      <Card className="w-[85%] min-[510px]:max-w-md">
         <CardHeader>
           <CardTitle>Admin Login</CardTitle>
           <CardDescription>
-            Please enter your email and password to access the admin dashboard.
+            Only authorized administrators can access this area.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form id="form-submit" onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
+              {/* Show Global Server Error */}
+              {serverError && (
+                <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md mb-4">
+                  {serverError}
+                </div>
+              )}
+
               <Controller
                 name="email"
                 control={form.control}
@@ -69,9 +106,8 @@ const AdminLogin = () => {
                     <Input
                       {...field}
                       id="form-email"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Enter your email"
-                      autoComplete="off"
+                      disabled={loading}
+                      placeholder="admin@company.com"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -79,6 +115,7 @@ const AdminLogin = () => {
                   </Field>
                 )}
               />
+
               <Controller
                 name="password"
                 control={form.control}
@@ -89,8 +126,8 @@ const AdminLogin = () => {
                       {...field}
                       id="form-password"
                       type="password"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Enter your password"
+                      disabled={loading}
+                      placeholder="••••••••"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -103,10 +140,20 @@ const AdminLogin = () => {
         </CardContent>
         <CardFooter className="mt-5">
           <Field orientation="vertical">
-            <Button type="submit" form="form-submit">
-              Login
+            <Button
+              type="submit"
+              form="form-submit"
+              className="w-full"
+              disabled={loading}
+            >
+              {loading ? "Verifying..." : "Login"}
             </Button>
-            <Button variant={"outline"} onClick={handleBack}>
+            <Button
+              variant="outline"
+              onClick={handleBack}
+              className="w-full"
+              disabled={loading}
+            >
               Back
             </Button>
           </Field>

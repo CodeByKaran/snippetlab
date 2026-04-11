@@ -35,7 +35,7 @@ const SnippetPage = () => {
       const allSnippets = infiniteData?.pages.flatMap((page) => page.snippets);
       return allSnippets?.find((s) => s.id === id);
     },
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 1, // 5 minutes
   });
 
   const handleCopyClick = () => {
@@ -111,7 +111,7 @@ const SnippetPage = () => {
       </div>
 
       {/* Optimized Sidebar */}
-      <aside className="lg:sticky lg:top-[68px] lg:h-screen lg:max-h-[calc(100vh-68px)] p-6 lg:p-8 space-y-8  bg-background min-[767px]:pl-15">
+      <aside className="lg:sticky lg:top-[78px] lg:h-screen lg:max-h-[calc(100vh-78px)] p-6 lg:p-8 space-y-8  bg-background min-[767px]:pl-15">
         <div>
           <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4">
             Details
