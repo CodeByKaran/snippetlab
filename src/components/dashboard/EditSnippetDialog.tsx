@@ -53,7 +53,7 @@ const EditSnippetDialog = ({ snippet, open, onOpenChange }: any) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-thin">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-hide ">
         <DialogHeader>
           <DialogTitle>Edit Snippet</DialogTitle>
         </DialogHeader>

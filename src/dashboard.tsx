@@ -9,14 +9,11 @@ import {
 } from "lucide-react";
 import { Button } from "./components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./components/ui/sheet";
-import SnippetsView from "./components/dashboard/SnippetsView";
-import AccountsView from "./components/dashboard/AccountsView";
-import CreateSnippetForm from "./components/dashboard/CreateSnippetForm";
-import AddAccountForm from "./components/dashboard/AddAccountForm";
 import { navBarHeight } from "./data/constant";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("snippets");
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const menuItems = [
@@ -26,22 +23,6 @@ const Dashboard = () => {
     { id: "add-account", label: "Add Account", icon: UserPlus },
   ];
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case "snippets":
-        return <SnippetsView />;
-      case "accounts":
-        return <AccountsView />;
-      case "create-snippet":
-        return <CreateSnippetForm onSuccess={() => setActiveTab("snippets")} />;
-      case "add-account":
-        return <AddAccountForm onSuccess={() => setActiveTab("accounts")} />;
-      default:
-        return <SnippetsView />;
-    }
-  };
-
-  // Pure UI for the Sidebar
   const SidebarContent = () => (
     <div className="flex flex-col h-full py-6">
       <div className="px-6 mb-8 flex items-center gap-2">
@@ -49,31 +30,33 @@ const Dashboard = () => {
         <h2 className="text-xl font-bold tracking-tight">Admin Panel</h2>
       </div>
       <nav className="flex-1 px-3 space-y-1">
-        {menuItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => {
-              setActiveTab(item.id);
-              setIsMobileMenuOpen(false);
-            }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === item.id
-                ? "bg-primary text-primary-foreground shadow-md"
-                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-            }`}
-          >
-            <item.icon size={18} />
-            {item.label}
-          </button>
-        ))}
+        {menuItems.map((item) => {
+          const fullPath = `/admin/dashboard/${item.id}`;
+          const isActive = location.pathname === fullPath;
+
+          return (
+            <Link
+              key={item.id}
+              to={fullPath}
+              onClick={() => setIsMobileMenuOpen(false)} // Close mobile menu on click
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                isActive
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+              }`}
+            >
+              <item.icon size={18} />
+              {item.label}
+            </Link>
+          );
+        })}
       </nav>
     </div>
   );
 
   return (
-    // Ensure the container is aligned to the top and spans full height
     <div className="flex items-start bg-background">
-      {/* DESKTOP SIDEBAR: The container is sticky */}
+      {/* DESKTOP SIDEBAR */}
       <aside
         style={{
           top: `${navBarHeight}px`,
@@ -101,9 +84,12 @@ const Dashboard = () => {
         </Sheet>
       </div>
 
-      {/* MAIN CONTENT: This part scrolls while the sidebar stays put */}
+      {/* MAIN CONTENT */}
       <main className="flex-1 p-4 md:p-8 min-h-screen">
-        <div className="max-w-6xl mx-auto">{renderContent()}</div>
+        <div className="max-w-6xl mx-auto">
+          {/* This is where the SnippetsView, AccountsView etc. will render */}
+          <Outlet />
+        </div>
       </main>
     </div>
   );

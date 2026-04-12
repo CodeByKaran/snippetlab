@@ -78,35 +78,49 @@ const SnippetPage = () => {
           </p>
         </div>
 
-        <div className="rounded-xl border border-border w-full relative group overflow-hidden bg-muted/20">
-          <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+        {/* CODE BLOCK CONTAINER */}
+        <div className="rounded-xl border border-border w-full relative group bg-muted/20 overflow-hidden">
+          {/* Copy Button */}
+          <div className="absolute top-4 right-4 z-10 sm:opacity-0 group-hover:opacity-100 transition-opacity  md:block">
             <button
-              className="flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground rounded-md shadow-lg hover:opacity-90 transition-all active:scale-95"
+              className="flex items-center gap-2 px-2 sm:px-3 py-1.5 bg-primary text-primary-foreground rounded-md shadow-lg hover:opacity-90 transition-all active:scale-95 "
               onClick={handleCopyClick}
             >
               {copied ? <Check size={14} /> : <Copy size={14} />}
-              <span className="text-xs font-medium">
+              <span className="text-xs font-medium hidden sm:block">
                 {copied ? "Copied!" : "Copy Code"}
               </span>
             </button>
           </div>
 
-          <SyntaxHighlighter
-            language={snippet.language}
-            style={isDark ? nightOwl : a11yLight}
-            customStyle={{
-              margin: 0,
-              padding: "1.5rem",
-              fontSize: "0.9rem",
-              background: "transparent", // Fixed: removed !important
-              fontFamily: "var(--font-mono)",
-              lineHeight: "1.6",
-            }}
-            showLineNumbers={true}
-            wrapLongLines={true}
-          >
-            {snippet.code}
-          </SyntaxHighlighter>
+          {/* Wrapper to handle horizontal scroll */}
+          <div className="overflow-x-auto w-full scrollbar-thin">
+            <SyntaxHighlighter
+              language={snippet.language}
+              style={isDark ? nightOwl : a11yLight}
+              customStyle={{
+                margin: 0,
+                padding: "1rem", // Smaller padding for mobile
+                fontSize: "0.85rem", // Slightly smaller font
+                background: "transparent",
+                fontFamily: "var(--font-mono)",
+                lineHeight: "1.7",
+                minWidth: "fit-content", // Ensures background colors don't cut off
+              }}
+              showLineNumbers={true}
+              // FIX: Changed wrapLongLines to false
+              wrapLongLines={false}
+              lineNumberStyle={{
+                minWidth: "2.5em",
+                paddingRight: "1em",
+                color: "rgba(120, 120, 120, 0.5)",
+                textAlign: "right",
+                userSelect: "none",
+              }}
+            >
+              {snippet.code}
+            </SyntaxHighlighter>
+          </div>
         </div>
       </div>
 

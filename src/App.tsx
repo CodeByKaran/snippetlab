@@ -4,6 +4,7 @@ import {
   Routes,
   useLocation,
   Navigate,
+  useNavigate,
 } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "./utils/supabase";
@@ -15,6 +16,10 @@ import Home from "./home";
 import SnippetPage from "./snippet-page";
 import Dashboard from "./dashboard";
 import { ThemeProvider } from "./components/theme-provider";
+import SnippetsView from "./components/dashboard/SnippetsView";
+import AccountsView from "./components/dashboard/AccountsView";
+import CreateSnippetForm from "./components/dashboard/CreateSnippetForm";
+import AddAccountForm from "./components/dashboard/AddAccountForm";
 
 const queryClient = new QueryClient();
 
@@ -49,8 +54,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+// ... imports remains the same
+
 const Layout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const hideNavBarOn = ["/admin-login", "/search-page"];
   const showNavBar = !hideNavBarOn.includes(location.pathname);
@@ -61,10 +69,7 @@ const Layout = () => {
       <div
         className="fixed inset-0 z-0"
         style={{
-          backgroundImage: `
-            linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
-            linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px)
-          `,
+          backgroundImage: `linear-gradient(to right, var(--grid-color) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px)`,
           backgroundSize: "32px 32px",
           WebkitMaskImage:
             "radial-gradient(ellipse 80% 80% at 0% 0%, #000 50%, transparent 90%)",
@@ -76,11 +81,12 @@ const Layout = () => {
       <div className="relative z-10">
         {showNavBar && <NavBar />}
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/snippet/:id" element={<SnippetPage />} />
 
-          {/* 2. Protect the Dashboard Route */}
+          {/* Protected Dashboard Routes */}
           <Route
             path="/admin/dashboard"
             element={
@@ -88,7 +94,25 @@ const Layout = () => {
                 <Dashboard />
               </ProtectedRoute>
             }
-          />
+          >
+            {/* Child Routes (Relative paths, no leading slash) */}
+            {/* This makes /admin/dashboard redirect to /admin/dashboard/snippets */}
+            <Route index element={<Navigate to="snippets" replace />} />
+            <Route path="snippets" element={<SnippetsView />} />
+            <Route path="accounts" element={<AccountsView />} />
+            <Route
+              path="create-snippet"
+              element={
+                <CreateSnippetForm onSuccess={() => navigate("snippets")} />
+              }
+            />
+            <Route
+              path="add-account"
+              element={
+                <AddAccountForm onSuccess={() => navigate("accounts")} />
+              }
+            />
+          </Route>
         </Routes>
       </div>
     </main>

@@ -20,7 +20,7 @@ const DrawerMenu = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [open, setOpen] = useState(false);
 
-  const isDashboard = location.pathname === "/admin/dashboard";
+  const isDashboard = location.pathname.startsWith("/admin/dashboard");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -52,7 +52,7 @@ const DrawerMenu = () => {
   return (
     <Drawer open={open} onOpenChange={setOpen} direction="bottom">
       <DrawerTrigger asChild>
-        <Button variant="outline" size="icon" className="md:hidden">
+        <Button variant="outline" size="icon" className="lg:hidden">
           <Equal />
         </Button>
       </DrawerTrigger>

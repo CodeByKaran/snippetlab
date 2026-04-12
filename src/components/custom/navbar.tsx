@@ -13,7 +13,7 @@ const NavBar = () => {
   const location = useLocation();
   const [session, setSession] = useState<Session | null>(null);
 
-  const isDashboard = location.pathname === "/admin/dashboard";
+  const isDashboard = location.pathname.startsWith("/admin/dashboard");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -38,11 +38,11 @@ const NavBar = () => {
   const firstLetter = userEmail?.charAt(0).toUpperCase();
 
   return (
-    <nav className="sticky top-0 bg-background border-b border-border/40 w-full z-50 transition-all duration-300">
-      <div className="relative flex justify-between items-center py-4 md:px-9 px-4">
+    <nav className="sticky top-0 bg-background border-b border-border/40 w-full z-50 transition-all duration-300 min-h-[76px] h-[76px]">
+      <div className="relative flex justify-between items-center py-4 md:px-9 px-4  min-h-[76px] h-[76px]">
         {/* LEFT: Logo */}
         <div
-          className="flex items-center cursor-pointer z-10"
+          className="flex items-center cursor-pointer z-10 "
           onClick={() => navigate("/")}
         >
           <Code size={20} />
@@ -53,15 +53,15 @@ const NavBar = () => {
 
         {/* MIDDLE: Search and Dashboard (Only when session is active) */}
         {session && (
-          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-4 w-auto">
-            <SearchBar isReadOnly={true} className="w-76" />
+          <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-4 w-auto">
+            <SearchBar isReadOnly={true} className="w-76 max-[1100px]:w-64" />
           </div>
         )}
 
         {/* RIGHT: User Controls */}
         <div className="flex items-center space-x-2 z-10">
           {session ? (
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-3">
               {/* Grouped: Toggle and Avatar */}
               <div className="flex items-center gap-2 p-1">
                 <Button
